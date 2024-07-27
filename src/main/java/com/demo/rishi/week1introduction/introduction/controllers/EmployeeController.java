@@ -3,6 +3,7 @@ package com.demo.rishi.week1introduction.introduction.controllers;
 import com.demo.rishi.week1introduction.introduction.dto.EmployeeDTO;
 import com.demo.rishi.week1introduction.introduction.entities.EmployeeEntity;
 import com.demo.rishi.week1introduction.introduction.repositories.EmployeeRepository;
+import com.demo.rishi.week1introduction.introduction.services.EmployeeService;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -12,27 +13,24 @@ import java.util.List;
 @RequestMapping(path = "employees")
 public class EmployeeController {
 
-    private final EmployeeRepository employeeRepository;
+    private final EmployeeService employeeService;
 
-    public EmployeeController(final EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
-
-
-
     @GetMapping()
-    public List<EmployeeEntity> home() {
-        return this.employeeRepository.findAll();
+    public List<EmployeeDTO> home() {
+        return this.employeeService.findAll();
     }
 
     @GetMapping(path = "/{employeeID}")
-    public EmployeeEntity getEmployee(@PathVariable Long employeeID) {
-        return this.employeeRepository.findById(employeeID).orElse(null);
+    public EmployeeDTO getEmployee(@PathVariable Long employeeID) {
+        return this.employeeService.findById(employeeID);
     }
 
     @PostMapping()
-    public EmployeeEntity createEmployee(@RequestBody EmployeeEntity employeeEntity) {
-        return this.employeeRepository.save(employeeEntity);
+    public EmployeeDTO createEmployee(@RequestBody EmployeeEntity employeeEntity) {
+        return this.employeeService.create(employeeEntity);
     }
 }
